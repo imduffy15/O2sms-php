@@ -2,7 +2,6 @@
 
 	class o2 {
 		var $cookiedir="cookies";
-		var $cookie = "o2.txt";
 
 		function login($username,$password) {
 			$url = "https://www.o2online.ie/amserver/UI/Login?org=o2ext&goto=//www.o2online.ie/o2/my-o2/&IDToken1=$username&IDToken2=$password";
@@ -17,7 +16,7 @@
 				//echo "login Successful\n";
 				return 1;
 			} else {
-				echo "couldn't connect to the site";
+				//echo "couldn't connect to the site";
 				return -1;
 			}
 
@@ -42,7 +41,7 @@
 			$message = str_replace("%5C%27", "%27", $message);
 			//$data = $this->curlURL("http://messaging.o2online.ie/smscenter_evaluate.osp?SID=_&FlagDLR=1&MsgContentID=-1&SMSToNormailzed=&SMSText=$message&country=&SMSTo=$number","post","http://messaging.o2online.ie/smscenter_send.osp");
 			//echo $data;
-			$data = $this->curlURL("http://messaging.o2online.ie/smscenter_send.osp?SID=_&FlagDLR=1&MsgContentID=-1&SMSToNormailzed=&SMSText=$message&country=&SMSTo=$number","post","http://messaging.o2online.ie/o2om_smscenter_new.osp?MsgContentID=-1&SID=_&SID=");
+			$data = $this->curlURL("http://messaging.o2online.ie/smscenter_send.osp?SID=_&FlagDLR=1&MsgContentID=-1&SMSToNormailzed=&SMSText=$message&country=&SMSTo=$number","post","http://messaging.o2online.ie/o2om_smscenter_new.osp?MsgContentID=-1&SID=_");
 			if(strstr($data, 'isSuccess : true')) {
 				return 1;
 			} else {
