@@ -2,6 +2,7 @@
 
 	class o2 {
 		var $cookiedir="cookies";
+		var $cookie = "o2.txt"
 
 		function login($username,$password) {
 			$url = "https://www.o2online.ie/amserver/UI/Login?org=o2ext&goto=//www.o2online.ie/o2/my-o2/&IDToken1=$username&IDToken2=$password";
