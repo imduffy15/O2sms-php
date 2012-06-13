@@ -55,6 +55,11 @@ class O2SMS {
             throw new Exception("Login failed");
         }
         elseif(strstr($apiActionData, 'You are logged in as')) {
+            $data = $this->apiAction(
+                        "http://messaging.o2online.ie/ssomanager.osp"
+                        ."?APIID=AUTH-WEBSSO",
+                        self::O2SMS_GET
+                    );
             return;
         }
         else {
@@ -87,11 +92,6 @@ class O2SMS {
     }
 
     function balance() { //check balance
-        $data = $this->apiAction(
-                    "http://messaging.o2online.ie/ssomanager.osp"
-                    ."?APIID=AUTH-WEBSSO",
-                    self::O2SMS_GET
-                );
         $data = $this->apiAction(
                     "http://messaging.o2online.ie/o2om_smscenter_new.osp"
                     ."?SID=_",
