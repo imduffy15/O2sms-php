@@ -84,11 +84,14 @@ class O2SMS {
     }
 
     function balance() { //check balance
+		$data = $this->apiAction(
+			"http://messaging.o2online.ie/ssomanager.osp?APIID=AUTH-WEBSSO",
+			self::O2SMS_GET
+			);
         $data = $this->apiAction(
             "http://messaging.o2online.ie/o2om_smscenter_new.osp?SID=_",
             self::O2SMS_GET
         );
-        var_dump($data);die;
         if(strstr($data,"spn_WebtextFree")) {
             $balance = explode("<span id=\"spn_WebtextFree\">",$data);
             $balance=explode('</span>',$balance[1]);
