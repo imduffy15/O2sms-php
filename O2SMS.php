@@ -2,10 +2,10 @@
 
 /**
  * O2SMS sending library
- * 
+ *
  * This library is a tad hackish but it enables you to send text messages from
- * O2 Ireland's web interface using just PHP. 
- * 
+ * O2 Ireland's web interface using just PHP.
+ *
  * @category Services
  * @package O2SMS
  * @author Ian Duffy <imduffy15@gmail.com>
@@ -15,14 +15,14 @@
  * @version 0.1
  */
 class O2SMS {
-   /**
-    * Define POST and GET for O2SMS::curl()
-    *
-    * @var int
-    */
+    /**
+     * Define POST and GET for O2SMS::curl()
+     *
+     * @var int
+     */
     const O2SMS_POST = 0;
     const O2SMS_GET = 1;
-    
+
     /**
      * Sets the path that the cookies are stored in
      *
@@ -41,20 +41,23 @@ class O2SMS {
         $actionUrl = "https://www.o2online.ie/amserver/UI/Login";
         $actionUrl .= "?org=o2ext&goto=//www.o2online.ie/o2/my-o2/";
         $actionUrl .= "&IDToken1=$username&IDToken2=$password";
-        
+
         $apiActionData = $this->apiAction(
-            $actionUrl,
-            self::O2SMS_POST,
-            "http://o2online.ie"
-        );
+                             $actionUrl,
+                             self::O2SMS_POST,
+                             "http://o2online.ie"
+                         );
 
         if(strstr($apiActionData,'in-correct')) {
             throw new Exception("Login details incorrect");
-        } elseif(strstr($apiActionData, 'isLoggedIn = false')) {
+        }
+        elseif(strstr($apiActionData, 'isLoggedIn = false')) {
             throw new Exception("Login failed");
-        } elseif(strstr($apiActionData, 'You are logged in as')) {
+        }
+        elseif(strstr($apiActionData, 'You are logged in as')) {
             return;
-        } else {
+        }
+        else {
             throw new Exception("Connection failed");
         }
     }
@@ -63,19 +66,18 @@ class O2SMS {
         if($this->balance() == 0) {
             throw new Exception("Out of webtexts");
         }
-        
         $message = urlencode($message);
         $message = str_replace("%5C%27", "%27", $message);
-        
+
         $apiActionData = $this->apiAction(
-             "http://messaging.o2online.ie/smscenter_send.osp"
-            ."?SID=_&FlagDLR=1&MsgContentID=-1"
-            ."&SMSToNormailzed=&SMSText=$message&country=&SMSTo=$number",
-             self::O2SMS_POST,
-             "http://messaging.o2online.ie/o2om_smscenter_new.osp"
-            ."?MsgContentID=-1&SID=_"
-        );
-        
+                             "http://messaging.o2online.ie/smscenter_send.osp"
+                             ."?SID=_&FlagDLR=1&MsgContentID=-1"
+                             ."&SMSToNormailzed=&SMSText=$message&country=&SMSTo=$number",
+                             self::O2SMS_POST,
+                             "http://messaging.o2online.ie/o2om_smscenter_new.osp"
+                             ."?MsgContentID=-1&SID=_"
+                         );
+
         if(strstr($apiActionData, 'isSuccess : true')) {
             return 0;
         } else {
@@ -84,14 +86,14 @@ class O2SMS {
     }
 
     function balance() { //check balance
-		$data = $this->apiAction(
-			"http://messaging.o2online.ie/ssomanager.osp?APIID=AUTH-WEBSSO",
-			self::O2SMS_GET
-			);
         $data = $this->apiAction(
-            "http://messaging.o2online.ie/o2om_smscenter_new.osp?SID=_",
-            self::O2SMS_GET
-        );
+                    "http://messaging.o2online.ie/ssomanager.osp?APIID=AUTH-WEBSSO",
+                    self::O2SMS_GET
+                );
+        $data = $this->apiAction(
+                    "http://messaging.o2online.ie/o2om_smscenter_new.osp?SID=_",
+                    self::O2SMS_GET
+                );
         if(strstr($data,"spn_WebtextFree")) {
             $balance = explode("<span id=\"spn_WebtextFree\">",$data);
             $balance=explode('</span>',$balance[1]);
@@ -110,7 +112,7 @@ class O2SMS {
             $url = $extractData[0];
             $postData = $extractData[1];
         }
-        
+
         $ch = curl_init($url);
         curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);
@@ -121,9 +123,9 @@ class O2SMS {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_COOKIEFILE, "$this->cookiePath");
         curl_setopt($ch, CURLOPT_COOKIEJAR, "$this->cookiePath");
-        curl_setopt($ch, CURLOPT_USERAGENT, 
-            'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1;'
-           .' .NET CLR 2.0.50727; .NET CLR 1.1.4322)');
+        curl_setopt($ch, CURLOPT_USERAGENT,
+                    'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1;'
+                    .' .NET CLR 2.0.50727; .NET CLR 1.1.4322)');
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_REFERER, $referer);
         if($method === self::O2SMS_POST) {
