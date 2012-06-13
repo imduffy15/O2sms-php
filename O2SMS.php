@@ -72,10 +72,11 @@ class O2SMS {
         $apiActionData = $this->apiAction(
                              "http://messaging.o2online.ie/smscenter_send.osp"
                              ."?SID=_&FlagDLR=1&MsgContentID=-1"
-                             ."&SMSToNormailzed=&SMSText=$message&country=&SMSTo=$number",
+                             ."&SMSToNormailzed=&SMSText=$message"
+                             ."&country=&SMSTo=$number",
                              self::O2SMS_POST,
-                             "http://messaging.o2online.ie/o2om_smscenter_new.osp"
-                             ."?MsgContentID=-1&SID=_"
+                             "http://messaging.o2online.ie/"
+                             ."o2om_smscenter_new.osp?MsgContentID=-1&SID=_"
                          );
 
         if(strstr($apiActionData, 'isSuccess : true')) {
@@ -87,11 +88,13 @@ class O2SMS {
 
     function balance() { //check balance
         $data = $this->apiAction(
-                    "http://messaging.o2online.ie/ssomanager.osp?APIID=AUTH-WEBSSO",
+                    "http://messaging.o2online.ie/ssomanager.osp"
+                    ."?APIID=AUTH-WEBSSO",
                     self::O2SMS_GET
                 );
         $data = $this->apiAction(
-                    "http://messaging.o2online.ie/o2om_smscenter_new.osp?SID=_",
+                    "http://messaging.o2online.ie/o2om_smscenter_new.osp"
+                    ."?SID=_",
                     self::O2SMS_GET
                 );
         if(strstr($data,"spn_WebtextFree")) {
@@ -139,6 +142,4 @@ class O2SMS {
         return $result;
     }
 }
-
-?>
 
